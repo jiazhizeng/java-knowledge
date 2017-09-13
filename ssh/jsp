@@ -29,3 +29,9 @@ Java web部署三种方法：
 1、拷贝部署：把项目拷贝到Tomcat的webapps目录下；
 2、war包部署：IDE根据把项目导出为war包，再拷贝到webapps目录；
 3、ide部署
+
+JSP
+jsp指令：描述所使用语言。 <%@page language="java"%>
+jsp声明：用户变量和方法，必须有分号。<%! ...  %>
+jsp代码：代码块。 <% ... %>
+jsp表达式：将jsp的数值嵌入html。<%= ... %>
