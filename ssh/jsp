@@ -24,3 +24,8 @@ JSP Model
 Spring：web开发框架
 
 平台搭建：安装jdk、安装Tomcat、配置、安装eclipse、配置；
+
+Java web部署三种方法：
+1、拷贝部署：把项目拷贝到Tomcat的webapps目录下；
+2、war包部署：IDE根据把项目导出为war包，再拷贝到webapps目录；
+3、ide部署
