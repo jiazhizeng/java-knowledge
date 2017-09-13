@@ -1,0 +1,14 @@
+eclipse插件安装
+1 在线安装：Help->Install New Software...->Work with->下拉显示已安装插件进行更新or点击Add输入插件地址安装
+2 从本地安装：Help->Install New Software...->Add->Archive...->选择插件压缩包安装
+3 手动安装：
+    a 将插件的plugins和features文件夹内容直接复制到eclipse下的plugins和features文件夹，重启即可
+    b eclipse安装路径下创建links路径->links里建立xxx.link文件(与插件同名)->编辑link文件加入“path=<pluginPath>”,path是插件安装路径
+      ->该安装路径下新建eclipse文件夹，在此文件夹内建立plugins和features文件夹，插件的对应内容复制，重启
+
+导入eclipse项目
+1 File->Import...
+2 选Existing Projects into Workspace->next
+3 选择位置，finish
+
+导入非eclipse项目
