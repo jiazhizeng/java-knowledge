@@ -4,16 +4,6 @@ ORM：对象/关系型数据映射（对象持久化技术）
 
 Hibernate：ORM框架
 
-Struts：web开发框架（MVC)
-初始化：web应用启动，初始化ActionServlet，读取配置信息，存到ActionMapping。
-响应流程：
-1、创建ActionMapping，包含把请求转发给哪个action的信息；
-2、创建ActionForm，保存客户提交的表单数据；
-3、是否要表单验证；
-4、ActionServlet根据配置决定请求转发给哪个action，调用execute方法；
-5、返回ActionForward，ActionServlet把请求转发给ActionForward对象指向的jsp组件；
-6、JSP组件生成动态网页，返回给客户。
-
 Hibernate demo:
 1、添加hibernate、mysql jar文件到用户库中；
 2、创建Java project，build path里加入hibernate和mysql用户库；
