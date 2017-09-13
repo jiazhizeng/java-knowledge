@@ -1,0 +1,45 @@
+ORM：对象/关系型数据映射（对象持久化技术）
+
+持久化实现数据处理层的业务逻辑和数据逻辑的分离
+
+Hibernate：ORM框架
+
+Struts：web开发框架（MVC)
+初始化：web应用启动，初始化ActionServlet，读取配置信息，存到ActionMapping。
+响应流程：
+1、创建ActionMapping，包含把请求转发给哪个action的信息；
+2、创建ActionForm，保存客户提交的表单数据；
+3、是否要表单验证；
+4、ActionServlet根据配置决定请求转发给哪个action，调用execute方法；
+5、返回ActionForward，ActionServlet把请求转发给ActionForward对象指向的jsp组件；
+6、JSP组件生成动态网页，返回给客户。
+
+Hibernate demo:
+1、添加hibernate、mysql jar文件到用户库中；
+2、创建Java project，build path里加入hibernate和mysql用户库；
+3、创建数据库，创建数据库表，包含id/username/password/email字段；
+4、创建User类，包含id/username/password/email,并添加set和get方法；
+5、创建User.hbm.xml文件；
+6、创建hibernate.cfg.xml文件；（数据库拦截设置、sql方言选择、映射资源）
+driver_class:com.mysql.jdbc.Driver
+url:jdbc:mysql://localhost:3306/databasename
+<mapping resource="User.hbm.xml"></mapping>
+7、创建测试类：
+public class Test {
+	public static void main(String[] args) {
+		try {
+			SessionFactory sf = new Configuration().configure().buildSessionFactory();
+			Session session = sf.openSession();
+			Transaction tx = session.beginTransaction();
+			User user = new User();
+			user.setUsername("hibernate");
+			user.setPassword("123");
+			session.save(user);
+			tx.commit();
+			session.close();
+		}catch(HibernateException e) {
+			e.printStackTrace();
+		}
+	}
+}
+8、运行，记录被添加到表中。
