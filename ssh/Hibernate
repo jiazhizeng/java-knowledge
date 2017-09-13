@@ -43,3 +43,113 @@ public class Test {
 	}
 }
 8、运行，记录被添加到表中。
+
+Hibernate核心接口
+Configuration:配置并启动hibernate，创建SessionFactory。buildSessionFactory()
+SessionFactory：初始化hibernate，创建Session，线程安全。openSession()
+Session：执行被持久化对象的CRUD操作，非线程安全
+	a 取得持久化对象：get()立即加载，不存在返回null；load()延迟加载，不存在抛出异常；
+	b 持久化对象保存、更新、删除：save() update() saveOrUpdate() delete()
+	c createQuery()生成query对象；
+	d beginTransaction()生产Transaction对象
+	e 管理session：isOpen() flush() clear() evict() close()
+Transaction：事务相关操作
+	commit() rollback() wasCommitted()
+Query(Criteria)：执行数据库查询
+	a setXxx()
+	b list() 返回查询结果，List对象
+	c executeUpdate()
+
+映射文档：可用工具生产，如XDoclet、Middlegen、AdnroMDA等。
+<!--
+hibernate-mapping可选属性：schema/default-cascade/auto-import/package
+-->
+<hibernate-mapping>
+	<!--class元素定义持久化类-->
+	<class name="" table="">
+		<!--id元素定义属性到表关键字段的映射-->
+		<id name="">
+			<!--用来为持久化类的实例生成唯一标识-->
+			<generator class="native"/>
+		</id>
+		<!--discriminator识别器，定义继承关系的映射方法-->
+		<discriminator column="" type=""/>
+		<!--property为类声明持久化的、javabean风格的属性-->
+		<property name="" type="">
+			<column name="name" length="" not-null="" />
+		</property>
+		... ...
+		<!--多对一映射关系-->
+		<many-to-one name="" column="" update=""/>
+		<!--设置关联关系-->
+		<set name="" inverse="" order-by="">
+			<key column=""/>
+			<!--一对多映射-->
+			<one-to-many class=""/>
+		</set>
+	</class>
+</hibernate-mapping>
+
+hibernate基本配置
+<session-factory>
+	<!--显示执行的sql语句-->
+	<property name="show_sql">true</property>
+	<!--连接字符串-->
+	<property name="connection.url">jdbc:mysql://localhost:3306/databasename</property>
+	<!--数据库驱动-->
+	<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+	<property name="connection.username"></property>
+	<property name="connection.password"></property>
+	<!--方言-->
+	<property name="dialet">org.hibernate.dialet.MySQLDialect</property>
+	<!--映射文件-->
+	<mapping resource="....hbm.xml" />
+</session-factory>
+
+OID对象标识符：标识对象唯一，数据表主键在Java对象模型中的等价物
+hibernate标识生产策略：
+increment hibernate自动以递增方式生成
+identity 底层数据库生成
+sequence 底层数据库的序列生成
+hilo/seqhilo
+native 自动选择identity/sequence/hilo 
+uuid.hex/uuid.string/assigned/foreign
+
+映射类型：内置、自动
+
+数据映射
+一对一映射one-to-one：主键关联、唯一外键关联
+唯一外键关联实现，与多对一映射实现类似，不同点：
+<many-to-one name="一端类属性" column="" cascade="all" unique="true"/>   多一个unique属性
+
+unique可能不生效解决(不让hibernate自动建表)：
+SchemaExport export=new SchemaExport(cfg);
+export.create(true,true);
+
+多对一映射many-to-one：映射关联实体。属性：
+name映射类属性的名字；column关联字段；class关联类的名字；cascade级联策略，all/none/save-update/delete
+<many-to-one name="一端类属性" column="" cascade="all"/> (多端的类建立一端类的属性)
+
+一对多映射one-to-many：一端建立以多段类为类型的集合
+<set name="类集合" cascade="all">
+	<key column="c_id"></key>
+	<one-to-many class="多端类"/>
+</set>
+
+多对一，一对多，外键都是在多端生成！！！
+发现的问题！！！：
+many-to-one可以自动建表，但是one-to-many不能自动建表，原因是hibernate配置少了以下一行：
+<property name="hibernate.hbm2ddl.auto">update</property>
+
+多对多映射：类似一对多实现
+<set name="类集合" table="stu_class" cascade="all">
+	<key column="c_id"></key>
+	<one-to-many class="多端类" column=""/>
+</set>
+
+hibernate批量处理
+一级缓存：session范围，容量小
+二级缓存：SessionFactory范围，需手动开启
+Session保存的对象不会立即更新到数据库，而是先保存到一级缓存，进行大量操作会溢出。
+可以手动刷新session.clear()，且清空一级缓存session.clear()
+批量更新和删除：session.createQuery(hql).executeUpdate();
