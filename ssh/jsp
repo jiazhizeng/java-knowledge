@@ -1,0 +1,26 @@
+J2EE
+
+4层模型、组件
+客户层-客户层组件：html、applets、客户端
+web层-web层组件：JSP页面、Servlets
+业务层-业务层组件：JavaBean
+EIS层-企业信息系统层组件：数据库、ERP等
+
+J2EE结构：容器和服务
+安全、事务处理、JNDI寻址、远程连接服务、生存周期管理、数据库连接池管理等支持；
+容器类型：EJB容器、Web容器、客户端容器、applets容器
+
+web服务和应用服务器：websphere、weblogic、jboss、Tomcat
+
+MVC
+模型、视图、控制
+
+JSP Model
+
+对象持久化
+持久就是把数据保存到可永久保存的存储介质和设备中。
+持久化目的是把内存中的数据存储在关系数据库或磁盘文件和XML数据文件中。
+
+Spring：web开发框架
+
+平台搭建：安装jdk、安装Tomcat、配置、安装eclipse、配置；
