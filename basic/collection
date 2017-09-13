@@ -1,0 +1,100 @@
+集合
+Collection：根接口；add、addAll、clear、isEmpty、iterator、remove、removeAll
+Set：无序，元素不可重复。HashSet、TreeSet、LinkedHashSet、EnumSet
+Queue：队列
+List：有序，元素可重复
+遍历：1、iterator遍历；2、foreach遍历
+ArrayList：随机访问,改慢读快；
+LinkedList：插入、删除，改快读慢；
+Map：HashMap/TreeMap
+
+import java.util.*;
+
+public class CollectionExample {
+	public static void main(String[] args){
+		//Set去重
+		Set set = new HashSet();
+		set.add("Luffy");
+		set.add("zoro");
+		set.add("Nami");
+		set.add("Luffy");
+		set.add("luffy");
+		System.out.println(set);
+		//TreeSet进行了排序
+		Set set2 = new TreeSet(set);
+		System.out.println(set2);
+		
+		//ArrayList
+		List list = new ArrayList();
+		list.add("hello");
+		list.add("world");
+		list.add("java");
+		list.add("hello");
+		list.clear();
+		System.out.println(list);
+		list.addAll(set);
+		System.out.println(list);
+		System.out.println(list.get(2));
+		System.out.println(list.get(0).equals("hello"));
+		System.out.println(list.contains("luffy"));
+		System.out.println(list.containsAll(set));
+		System.out.println(list.isEmpty());
+		System.out.println(list.remove("luffy"));
+		System.out.println(list);
+		System.out.println(list.size());
+		System.out.println(list.toArray().toString());
+		
+		//HashMap TreeMap
+		Map map = new HashMap();
+		map.put("gogo", 4);
+		map.put("nami", 3);
+		map.put("luffy", 1);
+		map.put("zoro", 2);
+		System.out.println(map);
+		Map sortedMap = new TreeMap(map);
+		System.out.println(sortedMap);
+		
+		//泛型类使用
+		Point<Integer> p1 = new Point<Integer>();
+		p1.setX(1);
+		p1.setY(2);
+		System.out.println(p1);
+		Point<Double> p2 = new Point<Double>();
+		p2.setX(0.23);
+		p2.setY(0.56);
+		System.out.println(p2);
+		
+		//泛型方法使用
+		Integer[] it = {1,2,3,4,6};
+		Character[] ch ={'a','b','c'};
+		printArray(it);
+		printArray(ch);
+	}
+	
+	//泛型方法，返回值前声明泛型类型名
+	public static <T> void printArray(T[] obj){
+		if(obj!=null){
+			for(T ob:obj){
+				System.out.println(ob);
+			}
+		}
+	}
+}
+
+//泛型类
+class Point<T>{
+	private T x;
+	private T y;
+	public T getX(){
+		return x;
+	}
+	public void setX(T x){
+		this.x=x;
+	}
+	public T getY(){
+		return y;
+	}
+	public void setY(T y){
+		this.y=y;
+	}
+}
