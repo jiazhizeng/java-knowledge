@@ -1,0 +1,6 @@
+字符串
+
+String:不可变
+StringBuffer：可变，线程安全
+StringBuilder：类似StringBuffer，线程不安全
+length、capacity，append、insert、replace、delete、reverse
