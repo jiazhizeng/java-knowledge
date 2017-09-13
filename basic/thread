@@ -1,0 +1,347 @@
+多线程：
+线程是进程的执行单元，进程是系统中资源调度和分配的独立单位
+创建、启动：1、继承Thread类，重写run方法；创建实例，用start启动；currentThread、getName；不能共享线程类的实例变量；
+			2、实现Runnable接口，重写run；创建实例，作为Thread的target创建Thread对象，Thread对象为线程对象；start启动；
+				可共享target的实例变量；
+			3、创建Callable接口实现类，实现call方法；创建实例；FutureTask包装Callable对象；作为Thread的target启动；get获得返回值；
+线程调用是随机的，跟启动顺序无关。
+如果类已有父类，实现多线程就只能实现Runnable接口。
+共享实例变量，在方法或对象上加锁，synchronized，线程安全（互斥区或临界区）。
+非线程安全：多个线程对同一对象的同一实例变量进行操作时会出现值被更改、值不同步的情况，影响程序执行流程。
+isAlive：正在运行或准备开始运行；sleep：正在执行的线程休眠（暂停执行）
+getId：线程标识
+interrupt：停止线程。1、线程正常退出，run完成后；2、stop，作废；3、interrupt。
+控制
+同步线程池
+
+demo1 继承Thread
+public class FirstThread extends Thread{
+	private int i;
+	public void run(){
+		for(;i<100;i++){
+			//继承Thread类后，用this获取当前线程
+			//getName（）返回线程名字
+			System.out.println(getName()+" "+i);
+		}
+	}
+	public static void main(String[] args){
+		for(int i=0;i<100;i++){
+			//currentThread获取当前线程
+			System.out.println(Thread.currentThread().getName()+" "+i);
+			if(i==20){
+				new FirstThread().start();
+				new FirstThread().start();
+			}
+		}
+	}
+}
+
+demo2 实现Runnable
+public class SecondThread implements Runnable{
+	private int i;
+	public void run(){
+		for(;i<100;i++){
+			//Thread.currentThread获取当前线程
+			System.out.println(Thread.currentThread().getName()+" "+i);
+		}
+	}
+	
+	public static void main(String[] args){
+		for(int i=0;i<100;i++){
+			System.out.println(Thread.currentThread().getName()+" "+i);
+			if(i==20){
+				SecondThread st = new SecondThread();
+				//new Thread(target,name)
+				new Thread(st,"新线程1").start();
+				new Thread(st,"新线程2").start();
+			}
+		}
+	}
+}
+
+demo3 实现Callable
+public class ThirdThread {
+	public static void main(String[] args){
+		ThirdThread rt =new ThirdThread();
+		//创建Callable对象，Lambda表达式创建Callable<Integer>对象
+		//FutureTask包装Callable对象
+		FutureTask<Integer> task = new FutureTask<Integer>((Callable<Integer>)()->{
+			int i=0;
+			for(;i<100;i++){
+				System.out.println(Thread.currentThread().getName()+" "+i);
+			}
+			return i;
+		});
+	
+		for(int i=0;i<100;i++){
+			System.out.println(Thread.currentThread().getName()+" "+i);
+			if(i==20){
+				new Thread(task,"有返回值的线程").start();
+			}
+		}
+		try{
+			System.out.println("子线程返回值："+task.get());
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+}
+
+demo4 线程执行跟启动顺序无关，随机调用
+public class MyThread {
+	public static void main(String[] args){
+		//Thread tr = new FirstThread();
+		//tr.start();
+		//System.out.println("执行完毕");
+		
+		try{
+			FirstThread tr = new FirstThread();
+			tr.setName("mythread");
+			tr.start();
+			for(int i=0;i<10;i++){
+				int sleeptime = (int) (Math.random()*1000);
+				Thread.sleep(sleeptime);
+				System.out.println(Thread.currentThread().getName());
+			}
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}
+		
+		/*
+		//演示线程的随机执行，跟启动顺序无关
+		SecondThread t1 = new SecondThread(1);
+		SecondThread t2 = new SecondThread(2);
+		SecondThread t3 = new SecondThread(3);
+		SecondThread t4 = new SecondThread(4);
+		SecondThread t5 = new SecondThread(5);
+		SecondThread t6 = new SecondThread(6);
+		SecondThread t7 = new SecondThread(7);
+		SecondThread t8 = new SecondThread(8);
+		SecondThread t9 = new SecondThread(9);
+		t1.start();t2.start();t3.start();
+		t4.start();t5.start();t6.start();
+		t7.start();t8.start();t9.start();
+		*/
+	}
+}
+class FirstThread extends Thread{
+	public void run(){
+		//super.run();
+		//System.out.println("线程执行中");
+		try{
+			for(int i=0;i<10;i++){
+				int sleeptime = (int) (Math.random()*1000);
+				Thread.sleep(sleeptime);
+				System.out.println(Thread.currentThread().getName());
+			}
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}
+	}
+}
+class SecondThread extends Thread{
+	private int i;
+	public SecondThread(int i){
+		super();
+		this.i=i;
+	}
+	public void run(){
+		System.out.println(i);
+	}
+}
+
+demo5不共享变量
+public class NotShare {
+	public static void main(String[] args){
+		NoShareThread a=new NoShareThread("A");
+		NoShareThread b=new NoShareThread("B");
+		NoShareThread c=new NoShareThread("C");
+		a.start();b.start();c.start();
+	}
+}
+class NoShareThread extends Thread{
+	private int count=5;
+	public NoShareThread(String name){
+		super();
+		this.setName(name);
+	}
+	public void run(){
+		super.run();
+		while(count>0){
+			count--;
+			System.out.println("由 "+currentThread().getName()+" 计算。 count="+count);
+		}
+	}
+}
+
+demo6共享变量，非线程安全vs线程安全
+public class ShareThread {
+	public static void main(String[] args){
+		Share tr = new Share();
+		Thread a = new Thread(tr,"A");
+		Thread b = new Thread(tr,"B");
+		Thread c = new Thread(tr,"C");
+		Thread d = new Thread(tr,"D");
+		a.start();b.start();
+		c.start();d.start();
+	}
+}
+class Share extends Thread{
+	private int count=5;
+	//public void run(){ //非线程安全
+	synchronized public void run(){
+		super.run();
+		count--;
+		System.out.println("由 "+currentThread().getName()+"计算,count="+count);
+	}
+}
+
+interrupted：测试当前线程是否已经中断，指运行this.interrupted方法的线程；具有清除状态（将标志清除为false）的功能；
+isInterrupted:测试线程Thread对象是否已经中断；不清除标志。
+demo7
+public class InterruptTest {
+	public static void main(String[] args){
+		/*
+		try{
+			TestInter tr = new TestInter();
+			tr.start();
+			tr.sleep(1000);
+			tr.interrupt();
+			System.out.println("是否停止1？="+tr.interrupted());//都是false
+			System.out.println("是否停止2？="+tr.interrupted()); //当前线程是main，未中断过
+		}catch(InterruptedException e){
+			System.out.println("main catch");
+			e.printStackTrace();
+		}
+		*/
+		
+		Thread.currentThread().interrupt();
+		System.out.println("是否停止1？="+Thread.interrupted());//true停止and清除
+		System.out.println("是否停止2?="+Thread.interrupted());//false
+	}
+}
+class TestInter extends Thread{
+	public void run(){
+		super.run();
+		for(int i=0;i<1000;i++){
+			System.out.println("i="+(i+1));
+		}
+	}
+}
+
+demo8
+public class InterruptTest {
+	public static void main(String[] args){
+		try{
+			TestInter tr = new TestInter();
+			tr.start();
+			Thread.sleep(1000);
+			tr.interrupt();
+		}catch(InterruptedException e){
+			System.out.println("main catch");
+			e.printStackTrace();
+		}
+		System.out.println("end!");
+	}
+}
+class TestInter extends Thread{
+	public void run(){
+		super.run();
+		for(int i=0;i<300000;i++){
+			if(this.interrupted()){
+				System.out.println("已经是停止状态，我要退出了！");
+				break;
+			}
+			System.out.println("i="+(i+1));
+		}
+		System.out.println("我被输出....");//停止线程，but此语句还会继续执行
+	}
+}
+
+demo9 异常法停止
+public class InterruptTest {
+	public static void main(String[] args){
+		try{
+			TestInter tr = new TestInter();
+			tr.start();
+			Thread.sleep(1000);
+			tr.interrupt();
+		}catch(InterruptedException e){
+			System.out.println("main catch");
+			e.printStackTrace();
+		}
+		System.out.println("end!");
+	}
+}
+class TestInter extends Thread{
+	public void run(){
+		super.run();
+		try{
+			for(int i=0;i<300000;i++){
+				if(this.interrupted()){
+					System.out.println("已经是停止状态，我要退出了！");
+					throw new InterruptedException();
+				}
+				System.out.println("i="+(i+1));
+			}
+			System.out.println("我在for后面....");
+		}catch(InterruptedException e){
+			System.out.println("in catch...");
+			e.printStackTrace();
+		}
+	}
+}
+
+demo10 沉睡中停止
+public class SleepInterrupt {
+	public static void main(String[] args){
+		try{
+			TestSleep tr = new TestSleep();
+			tr.start();
+			Thread.sleep(200); //先sleep再interrupt
+			tr.interrupt();
+		}catch(InterruptedException e){
+			System.out.println("main catch");
+			e.printStackTrace();
+		}
+	}
+}
+class TestSleep extends Thread{
+	public void run(){
+		super.run();
+		try{
+			System.out.println("run begin");
+			Thread.sleep(200000);
+			System.out.println("run end");
+		}catch(InterruptedException e){
+			System.out.println("沉睡被停止，进入catch! "+this.isInterrupted());
+			e.printStackTrace();
+		}
+	}
+}
+
+demo11 先停止，后sleep
+public class SleepInterrupt {
+	public static void main(String[] args){
+		TestSleep tr = new TestSleep();
+		tr.start();
+		tr.interrupt();
+		System.out.println("end");
+	}
+}
+class TestSleep extends Thread{
+	public void run(){
+		super.run();
+		try{
+			for(int i=0;i<100000;i++){
+				System.out.println("i="+(i+1));
+			}
+			System.out.println("run begin");
+			Thread.sleep(200000);
+			System.out.println("run end");
+		}catch(InterruptedException e){
+			System.out.println("先停止，遇到sleep，进入catch! "+this.isInterrupted());
+			e.printStackTrace();
+		}
+	}
+}
