@@ -1,0 +1,193 @@
+AWT:抽象窗口工具集 java.awt
+基类
+Component:Button/TextField/List/Container... 组件
+MenuComponent:MenuBar/MenuItem... 
+LayoutManager:管理布局
+Container:Window/Panel/ScollPanel 容器
+Window:Frame/Dialog
+Panel:Applet
+
+demo1创建简单窗口
+public class TestJava {
+	public static void main(String[] args){
+		Frame f = new Frame("Test Window"); //位置、大小
+		f.setBounds(30, 30, 250, 200);
+		f.setVisible(true); //默认隐藏
+	}
+}
+
+demo2创建带button和textfield的panel，但要放在Frame里
+public class TestJava {
+	public static void main(String[] args){
+		Frame f = new Frame("Test Window");
+		Panel p = new Panel();
+		p.add(new TextField(20)); //向panel添加组件
+		p.add(new Button("click me")); 
+		f.add(p); //panel容器加到Frame窗口中
+		f.setBounds(30, 30, 250, 200);
+		f.setVisible(true);
+	}
+}
+
+布局管理器
+FlowLayout：从左向右排列组件，遇边界下一行重新开始；（Panel、Applet默认使用）
+demo3
+public class TestJava {
+	public static void main(String[] args){
+		Frame f = new Frame("Test Window");
+		f.setLayout(new FlowLayout(FlowLayout.LEFT,20,5));
+		for(int i=0;i<10;i++){
+			f.add(new Button("button"+i));
+		}
+		f.pack();//设置窗口为最佳大小
+		f.setVisible(true);
+	}
+}
+
+BorderLayout（Frame/Dialog/ScollPanel默认使用）：EAST、SOUTH、WEST、NORTH、CENTER
+调整大小时，南北中，水平调整；东西中，垂直调整。
+向该布局的容器添加组件时，应指定区域，否则添加到中间区域；同区域多个组件，后来的会覆盖先来的；
+demo4
+public class TestJava {
+	public static void main(String[] args){
+		Frame f = new Frame("Test Window");
+		f.setLayout(new BorderLayout(30,5));
+		f.add(new Button("south"),BorderLayout.SOUTH);
+		f.add(new Button("north"),BorderLayout.NORTH);
+		f.add(new Button("east"),BorderLayout.EAST);
+		f.add(new Button("west"),BorderLayout.WEST);
+		f.add(new Button("center"));
+		f.pack();
+		f.setVisible(true);
+	}
+}
+
+GridLayout:网格，从左向右、从上到下依次添加到网格中；大小有组件所在区域决定（填满）。
+demo5
+public class GridLayoutTest {
+	public static void main(String[] args){
+		Frame f = new Frame("calculator");
+		Panel p1 = new Panel();
+		p1.add(new TextField(30));
+		f.add(p1,BorderLayout.NORTH);
+		Panel p2 =new Panel();
+		p2.setLayout(new GridLayout(3,5,4,4));
+		String[] name = {"0","1","2","3","4","5","6","7","8","9","+","-","*","/","."};
+		for(int i=0;i<name.length;i++){
+			p2.add(new Button(name[i]));
+		}
+		f.add(p2);
+		f.pack();
+		f.setVisible(true);
+	}
+}
+
+GridBagLayout:组件可跨一个或多个网格，且可设置网格互不相同；窗口变化也进行相应拉伸。
+GidBagConstraints:与组件关联，控制大小、跨越性；
+1、创建GridBagLayout，指定容器使用该布局；
+2、创建GridBagConstraints对象，设置相关属性（大小、跨越性）；
+3、调用GridBagLayout的方法setConstraints确立GridBagConstraints与受控制组件的关联
+4、添加组件；
+GridBagConstraints：gridx、gridy、gridwidth、gridheight、fill。。。。
+demo6
+public class GridLayoutTest {
+	private GridBagLayout gb = new GridBagLayout();
+	private Frame f = new Frame("TestWindow");
+	private GridBagConstraints gbc = new GridBagConstraints();
+	private Button[] bts = new Button[10];
+	public void init(){
+		f.setLayout(gb);
+		for(int i=0;i<bts.length;i++){
+			bts[i]=new Button("button"+i);
+		}
+		gbc.fill=GridBagConstraints.BOTH;//可横向纵向扩大
+		gbc.weightx=1;
+		addButton(bts[0]);
+		addButton(bts[1]);
+		addButton(bts[2]);
+		gbc.gridwidth = GridBagConstraints.REMAINDER;//横向最后一个组件
+		addButton(bts[3]);
+		gbc.weightx=0;//控制组件横向不扩大
+		addButton(bts[4]);
+		gbc.gridwidth=2;//横跨2个网格
+		addButton(bts[5]);
+		gbc.gridwidth=1;//横跨1个网格
+		gbc.gridheight=2;//纵向跨2个网格
+		gbc.gridwidth=GridBagConstraints.REMAINDER;
+		addButton(bts[6]);
+		gbc.gridwidth=1;gbc.gridheight=2;
+		gbc.weighty=1;
+		addButton(bts[7]);
+		gbc.weighty=0;
+		gbc.gridwidth=GridBagConstraints.REMAINDER;
+		gbc.gridheight=1;
+		addButton(bts[8]);
+		addButton(bts[9]);
+		f.pack();
+		f.setVisible(true);
+	}
+	private void addButton(Button bt){
+		gb.setConstraints(bt, gbc);
+		f.add(bt);
+	}
+	public static void main(String[] args){
+		new GridLayoutTest().init();
+	}
+}
+
+CardLayout：所有组件像一叠卡片，每次只有最上面的组件可见；
+public class CardLayoutTest {
+	Frame f = new Frame();
+	String[] name={"第一张","第二张","第三张","第四张","第五张"};
+	Panel pl = new Panel();
+	public void init(){
+		final CardLayout c = new CardLayout();
+		pl.setLayout(c);
+		for(int i=0;i<name.length;i++){
+			pl.add(name[i],new Button(name[i]));
+		}
+		Panel p = new Panel();
+		ActionListener listnener = e ->
+		{
+			switch(e.getActionCommand()){
+			case "上一张":
+				c.previous(pl);
+				break;
+			case "下一张":
+				c.next(pl);
+				break;
+			case "第一张":
+				c.first(pl);
+				break;
+			case "最后一张":
+				c.last(pl);
+				break;
+			case "第三张":
+				c.show(pl, "第三张");
+				break;
+			}
+		};
+		Button pre = new Button("上一张");
+		pre.addActionListener(listnener);
+		Button next = new Button("下一张");
+		next.addActionListener(listnener);
+		Button first = new Button("第一张");
+		first.addActionListener(listnener);
+		Button last = new Button("最后一张");
+		last.addActionListener(listnener);
+		Button third = new Button("第三张");
+		third.addActionListener(listnener);
+		p.add(pre);
+		p.add(next);
+		p.add(first);
+		p.add(last);
+		p.add(third);
+		f.add(pl);
+		f.add(p,BorderLayout.SOUTH);
+		f.pack();
+		f.setVisible(true);
+	}
+	public static void main(String[] args){
+		new CardLayoutTest().init();
+	}
+}
