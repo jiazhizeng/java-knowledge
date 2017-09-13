@@ -12,3 +12,7 @@ eclipse插件安装
 3 选择位置，finish
 
 导入非eclipse项目
+1 新建eclipse项目
+2 File->Import...
+3 对话框选“File System”,next
+4 路径选择
