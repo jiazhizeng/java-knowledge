@@ -1,0 +1,48 @@
+异常处理
+1、出现异常->抛给jvm->jvm找到相应的处理块（捕获异常），找不到则退出；
+2、try...catch...finally（显示捕获处理），可以在finally中回收资源；
+3、可以在方法声明中的最后，抛出异常 throws；
+4、异常捕获后处理时可以在catch中抛出另一个异常，原始异常保留下来，抛出的另一个异常给其他人看；
+5、可以用throw抛出一个异常实例；
+6、自定义异常类，继承Exception or RuntimeException，构造函数需2个：一个空，一个带字符串参数；
+7、异常链，异常不处理的话层层抛出，最后抛给入口main或多线程的run方法结束；
+
+import java.io.FileInputStream;
+import java.io.IOException;
+
+public class ExceptionTest {
+	//checked异常需要显示处理
+	/*
+	public static void main(String[] args) {
+		
+		try{
+			FileInputStream file = new FileInputStream("a.txt");
+		}catch(IOException ioe){ //捕获把那个处理异常
+			System.out.println("hello");
+			System.out.println(ioe.getMessage());
+			ioe.printStackTrace();
+		}finally{
+			//回收资源
+		}
+	}
+	*/
+		
+	//或在方法声明里显示抛出异常 throws...
+	public static void main(String args) throws IOException{
+		
+		FileInputStream file = new FileInputStream("a.txt");
+	}
+	
+	//异常链 捕获一个异常抛出另一个异常，原始异常保存下来（给开发者和用户看到的不一样）
+	//catch块中抛出另一个异常
+}
+
+//自定义异常类，继承Exception or RuntimeException
+//两个构造函数，一个为空，一个含一个字符串参数
+class SelfException extends RuntimeException{
+	SelfException(){
+	}
+	SelfException(String msg){
+		super(msg);
+	}
+}
