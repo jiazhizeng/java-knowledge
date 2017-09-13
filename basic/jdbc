@@ -1,0 +1,58 @@
+jdbc：驱动程序管理器；驱动程序测试工具包；ODBC桥；
+1、导入jdbc驱动
+2、注册jdbc驱动：Class.forName()/DriverManager.registerDriver() //C:\Users\Administrator\Downloads\doc\mysql-connector-java-5.1.44\mysql-connector-java-5.1.44
+3、数据库url锁定 
+4、创建连接对象
+
+import java.sql.*;
+
+public class JdbcTest {
+	//jdbc driver
+	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+	//db
+	static final String DB_URL = "jdbc:mysql://localhost/javatest";
+	static final String USER = "root";
+	static final String PASS = "root";
+	public static void main(String[] args){
+		Connection conn = null;
+		Statement stmt = null;
+		try{
+			Class.forName("com.mysql.jdbc.Driver");//register jdbc driver
+			System.out.println("Connecting to database...");
+			//open connection
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			//query
+			System.out.println("Creating statement");
+			stmt = conn.createStatement();
+			String sql = "select id,name,age from students;";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()){
+				int id = rs.getInt("id");
+				int age = rs.getInt("age");
+				String name = rs.getString("name");
+				System.out.println("id:"+id+", age:"+age+", name:"+name);
+			}
+			rs.close();stmt.close();conn.close();
+		}catch(SQLException se){
+			se.printStackTrace();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			//close resource
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+				se2.printStackTrace();
+			}
+			try{
+				if(conn!=null){
+					conn.close();
+				}
+			}catch(SQLException se3){
+				se3.printStackTrace();
+			}
+		}
+		System.out.println("goodbye!");
+	}
+}
