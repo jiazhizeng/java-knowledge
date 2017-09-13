@@ -1,0 +1,3 @@
+lang包（基础核心包）：Object、基本类型封装类、Math、StringBuffer、StringBuilder、Enum、System
+		Process/Thread等进程类、Runtime、Character、Throwable
+util包（方法/数据结构）：Calendar、Date、Dictionary、Local、Random、Vector、EventObject、EventListener
