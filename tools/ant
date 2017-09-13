@@ -1,0 +1,39 @@
+ant是基于Java的生成工具，相对于C/C++的make
+下载解压，设置ANT_HOME路径为安装路径，%ANT_HOME%/bin加入path环境变量
+
+-find or -s :向上搜索直达跟路径
+-f or -file or -buildfile：指定build文件
+-quiet -q: 输出少量信息
+-verbose -v：输出更多信息
+-D<property>=<value>：指定属性覆盖生成文件中的属性
+
+生成文件：定义各项目的各个生成任务及任务间的依赖关系；一个target表示一个任务
+默认名字：build.xml
+项目层次结构
+<project>:
+  -src:源文件、配置文件
+  -classes:编译后的class文件
+  -lib:第三方jar包
+  -dist:项目打包、发布的文件夹
+  -build.xml:ant生成文件
+  
+project元素属性
+default:指定默认target
+basedir:项目的基准路径
+name:项目名
+description:项目描述
+
+target元素属性
+name:target名称，不能重复
+depends:可指定>=1个target，表示先运行指定的target
+if:指定属性名，设置了才执行
+unless:指定属性名，没设置则执行
+description:描述
+
+任务格式：<name attribute1="value1" ... />
+
+property元素：定义属性;name/value/resource/file/url/environment/classpath/classpathref
+<property name="..." value="..."/>
+
+path元素：其他任务的子元素，
+classpath元素：project的子元素
