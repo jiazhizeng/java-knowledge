@@ -1,0 +1,6 @@
+io流
+字节流：InputStream、OutputStream；read：每次读一个字节，-1返回，write：写，close：关闭
+字符流：Reader、Writer；
+标准流：System.in System.out System.err
+文件处理：FileInputStream、FileOutputStream
+File:create/exists/mkdir/delete/isFile/getPath
