@@ -51,9 +51,7 @@ Query(Criteria)：执行数据库查询
 	c executeUpdate()
 
 映射文档：可用工具生产，如XDoclet、Middlegen、AdnroMDA等。
-<!--
-hibernate-mapping可选属性：schema/default-cascade/auto-import/package
--->
+<!--hibernate-mapping可选属性：schema/default-cascade/auto-import/package-->
 <hibernate-mapping>
 	<!--class元素定义持久化类-->
 	<class name="" table="">
@@ -120,7 +118,7 @@ export.create(true,true);
 name映射类属性的名字；column关联字段；class关联类的名字；cascade级联策略，all/none/save-update/delete
 <many-to-one name="一端类属性" column="" cascade="all"/> (多端的类建立一端类的属性)
 
-一对多映射one-to-many：一端建立以多段类为类型的集合
+一对多映射one-to-many：一端建立以多端类为类型的集合
 <set name="类集合" cascade="all">
 	<key column="c_id"></key>
 	<one-to-many class="多端类"/>
