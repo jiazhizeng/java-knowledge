@@ -1,0 +1,12 @@
+jsp:本质是Servlet
+每个jsp页面是一个Servlet实例，jsp页面由系统编译成Servlet，Servlet再负责响应用户请求
+启动Tomcat后，可以在work目录的相应web项目里找到生成的java文件和class文件
+主要含3个方法(去掉_jsp前缀):init()/destroy()/service()
+
+jsp页面工作原理：如jsp页面第一次收到请求，则先编译jsp文件生成Servlet。否则根据请求生成html返回
+每个Servlet在容器中只有一个实例
+
+jsp注释：<%-- --%>
+jsp注释不会被发送到客户端
+
+jsp声明：<%! %>
