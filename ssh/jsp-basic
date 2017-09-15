@@ -10,3 +10,25 @@ jsp注释：<%-- --%>
 jsp注释不会被发送到客户端
 
 jsp声明：<%! %>
+jsp表达式：<%= %> (不能有分号)
+
+jsp编译指令
+page: language/extends/session/buffer/autoFlush/info/errorPage/contentType/pageEncoding
+include：包含另一个页面,静态，file属性；动态用<jsp:include>
+taglib：定义和访问自定义标签
+<%@ 编译指令名 属性名="属性值"...%>
+
+jsp动作指令
+jsp:forward <jsp:forward page="{relativeURL|<%=expression%>}">
+jsp:param
+jsp:include
+jsp:plugin
+jsp:useBean
+jsp:setProperty
+jsp:getProperty
+
+jsp内置对象
+application/config/exception/out/page/pageContext/request/response/session
+application:整个应用多个jsp、servlet共享数据；访问web应用的配置参数，对应web.xml的<context-param>元素
+
+Servlet
