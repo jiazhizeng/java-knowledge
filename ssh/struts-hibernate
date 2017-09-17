@@ -1,0 +1,31 @@
+1 建立web项目,默认创建web.xml
+2 添加struts2的jar包到WEB-INF/lib下，并编辑该目录下的web.xml,添加struts过滤器
+  <filter>
+  	<filter-name>struts2</filter-name>
+  	<filter-class>org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>struts2</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+3 在Java Resource/src下创建struts.xml并编辑，添加相关action
+4 添加hibernate的jar包到WEB-INF/lib下
+5 在Java Resource/src下创建hibernate.cfg.xml并编辑，添加数据库相关设置
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.password">root</property>
+        <property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/mydb</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="show_sql">true</property>
+        <property name="hbm2ddl.auto">update</property>
+        <property name="format_sql">true</property>
+        <mapping resource="dps/bean/User.hbm.xml" />
+    </session-factory>
+</hibernate-configuration>
+6 实体类及其映射文件定义：定义实体类，然后在实体类定义的同一目录下创建编辑User.hbm.xml, 并加到hibernate.cfg.xml中，见5
+7 Dao层接口及其实现类定义：为可读性和可维护性，对数据库操作层进行封装；Data Access Object(Dao)
+8 前台页面
+9 后台业务逻辑编写
+10 测试运行
