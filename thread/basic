@@ -1,0 +1,28 @@
+实现多线程:
+继承Thread,重写run方法
+实现Runnable,重写run方法
+
+currentThread: 获取当前运行的线程
+sleep
+yield
+
+getName
+isAlive
+join
+setDaemon：守护线程
+setPriority
+
+interrupt: 停止线程
+interrupted: 当前运行线程是否停止，重置标记
+isInterrupted: 线程是否停止
+
+终止线程方法：
+1 异常法，interrupt isInterrupted判断后throw异常
+2 睡眠法，sleep后interrupt
+3 强行法，stop，已废弃，容易导致数据不一致
+4 return法，interrupt isInterrupted判断后return返回
+
+yield: 放弃CPU资源
+
+可重入锁
+同步具有继承性
